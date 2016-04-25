@@ -7,6 +7,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
