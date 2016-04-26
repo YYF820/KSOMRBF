@@ -1,14 +1,16 @@
 package com.hz.nn.network.vectors;
 
+import com.google.common.base.MoreObjects;
 import com.hz.nn.network.model.InputVector;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Dmytro_Hanzha.
  */
-public class InputVectors {
+public class InputVectors implements Iterable<InputVector> {
 
     private final List<InputVector> inputVectors;
 
@@ -61,4 +63,18 @@ public class InputVectors {
     public void add(InputVector inputVector) {
         inputVectors.add(inputVector);
     }
+
+    @Override
+    public Iterator<InputVector> iterator() {
+        return inputVectors.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("inputVectors", inputVectors)
+                .toString();
+    }
 }
+
+

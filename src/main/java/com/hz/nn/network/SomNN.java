@@ -33,7 +33,6 @@ public class SomNN implements Clusterer {
     private int xDimension, yDimension, iterations, initialRadius;
     private double learningRate;
     private DistanceMeasure distanceMeasure;
-    private WeightVectors weightVectors;
 
     /**
      * Create a 2 by 2 Self-organizing map, using a hexagonal grid, 1000
@@ -92,21 +91,21 @@ public class SomNN implements Clusterer {
     @Override
     public Dataset[] cluster(Dataset data) {
         // hexa || rect
-        weightVectors = new WeightVectors(xDimension, yDimension, data.noAttributes(), gridType.toString()); //noAttributes - number of attributes in each instance
+        WeightVectors weightVectors = new WeightVectors(xDimension, yDimension, data.noAttributes(), gridType.toString());
         InputVectors inputVectors = convertDataSetToInputVectors(data);
         // exponential || inverse || linear
         SomTraining somTraining = new SomTraining(inputVectors, weightVectors);
         // gaussian || step
         somTraining.setTrainingInstructions(iterations, learningRate, initialRadius, learningType.toString(),
                 neighbourhoodFunction.toString());
-        WeightVectors weightVectors = somTraining.doTraining(distanceMeasure);
-        System.out.println(weightVectors);
+        somTraining.doTraining(distanceMeasure);
+
         List<Dataset> allClusters = new ArrayList<>();
-        for (int i = 0; i < this.weightVectors.size(); i++) {
+        for (int i = 0; i < weightVectors.size(); i++) {
             allClusters.add(new DefaultDataset());
         }
 
-        this.weightVectors = doLabeling(this.weightVectors, inputVectors, data, allClusters, distanceMeasure);
+        doLabeling(weightVectors, inputVectors, data, allClusters, distanceMeasure);
 
         // Filter empty clusters out;
         List<Dataset> resultClusters = allClusters.stream()
