@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
+ * The type Activation gaussian.
+ *
  * @author Dmytro_Hanzha.
  */
 public class ActivationGaussian implements ActivationFunction {

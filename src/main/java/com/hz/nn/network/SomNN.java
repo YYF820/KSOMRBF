@@ -8,6 +8,7 @@ import com.hz.nn.network.enums.GridType;
 import com.hz.nn.network.enums.LearningType;
 import com.hz.nn.network.enums.NeighbourhoodFunction;
 import com.hz.nn.network.training.SomTraining;
+import com.hz.nn.network.util.NeuralUtilities;
 import com.hz.nn.network.vectors.InputVectors;
 import com.hz.nn.network.vectors.WeightVectors;
 import net.sf.javaml.clustering.Clusterer;
@@ -91,8 +92,11 @@ public class SomNN implements Clusterer {
     @Override
     public Dataset[] cluster(Dataset data) {
         // hexa || rect
-        WeightVectors weightVectors = new WeightVectors(xDimension, yDimension, data.noAttributes(), gridType.toString());
         InputVectors inputVectors = convertDataSetToInputVectors(data);
+        inputVectors = NeuralUtilities.doGaussian(inputVectors, 1, 0.2);
+
+        WeightVectors weightVectors = new WeightVectors(xDimension, yDimension, inputVectors.numberOfAttributes(), gridType.toString());
+
         // exponential || inverse || linear
         SomTraining somTraining = new SomTraining(inputVectors, weightVectors);
         // gaussian || step

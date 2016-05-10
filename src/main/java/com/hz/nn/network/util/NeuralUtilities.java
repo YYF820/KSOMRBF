@@ -6,9 +6,11 @@ import com.hz.nn.network.vectors.WeightVectors;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.distance.DistanceMeasure;
+import org.encog.mathutil.BoundMath;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Dmytro_Hanzha.
@@ -18,6 +20,7 @@ public class NeuralUtilities {
     private NeuralUtilities() {
         throw new AssertionError("Instantiate util class.");
     }
+
 
     public static InputVectors convertDataSetToInputVectors(Dataset data) {
         InputVectors inputVectors = new InputVectors();
@@ -74,5 +77,26 @@ public class NeuralUtilities {
             weightVectors.setNodeLabelAt(indexOfWinningNeuron, inputVectors.getInputVectorLabelAt(i));
         }
         return weightVectors;
+    }
+
+    public static InputVectors doGaussian(InputVectors inputVectors, double peak, double width) {
+        InputVectors highDimensionalVectors = new InputVectors();
+        for (InputVector inputVector : inputVectors) {
+            Double[] highDimensionalValues = new Double[inputVector.getValues().length * 2];
+            for (int i = 0; i < highDimensionalValues.length; i++) {
+                final double[] sum = {0};
+                Arrays.stream(inputVector.getValues()).forEach(value -> {
+                            double center = ThreadLocalRandom.current().nextDouble(0, 1);
+                            sum[0] += Math.pow((value - center), 2);
+                        }
+                );
+                highDimensionalValues[i] = BoundMath.exp((-sum[0] / (0.2)));
+            }
+            highDimensionalVectors.add(new InputVector(inputVector.getLabel(), highDimensionalValues));
+        }
+        System.out.println("INPUT: " + inputVectors);
+        System.out.println("===============================");
+        System.out.println("AFTER: " + highDimensionalVectors);
+        return highDimensionalVectors;
     }
 }

@@ -1,12 +1,13 @@
 package com.hz.nn;
 
 import com.hz.nn.network.SomNN;
-import com.hz.nn.network.activation_functions.ActivationFunction;
-import com.hz.nn.network.activation_functions.ActivationGaussian;
 import com.hz.nn.network.enums.GridType;
 import com.hz.nn.network.enums.LearningType;
 import com.hz.nn.network.enums.NeighbourhoodFunction;
+import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
+import net.sf.javaml.clustering.evaluation.SumOfSquaredErrors;
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.filter.normalize.NormalizeMidrange;
 import net.sf.javaml.tools.data.FileHandler;
@@ -25,19 +26,21 @@ public class Application {
         NormalizeMidrange nmr = new NormalizeMidrange();
         nmr.filter(data);
 
-        ActivationFunction activationFunction = new ActivationGaussian(0.4, 1, 0.5);
-        //activationFunction.doActivation(data, 0, data.noAttributes());
-
-        SomNN somNN = new SomNN(1, 3, GridType.RECTANGLES, 100000, 0.05, 1, LearningType.LINEAR, NeighbourhoodFunction.GAUSSIAN, new EuclideanDistance());
+        SomNN somNN = new SomNN(1, 3, GridType.HEXAGONAL, 100000, 0.05, 1, LearningType.LINEAR, NeighbourhoodFunction.GAUSSIAN, new EuclideanDistance());
 
         Dataset[] cluster = somNN.cluster(data);
         System.out.println(cluster.length);
         System.out.println("===============================");
-        System.out.println(cluster[0].size());
-        System.out.println("===============================");
-        System.out.println(cluster[1].size());
-        System.out.println("===============================");
-        System.out.println(cluster[2].size());
-        System.out.println("===============================");
+        for (Dataset instances : cluster) {
+            System.out.println(instances.size());
+            for (Instance instance : instances) {
+                System.out.print(instance.classValue() + " ");
+            }
+            System.out.println("===============================");
+
+        }
+
+        ClusterEvaluation sse= new SumOfSquaredErrors();
+        System.out.println(sse.score(cluster));
     }
 }

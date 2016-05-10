@@ -3,6 +3,8 @@ package com.hz.nn.network.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
+import java.util.Arrays;
+
 /**
  * @author Dmytro_Hanzha.
  */

@@ -64,6 +64,10 @@ public class InputVectors implements Iterable<InputVector> {
         inputVectors.add(inputVector);
     }
 
+    public int numberOfAttributes() {
+        return inputVectors.get(0).getValues().length;
+    }
+
     @Override
     public Iterator<InputVector> iterator() {
         return inputVectors.iterator();
